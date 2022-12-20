@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart - Boi Lagbe | Online Books Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link href="/static/css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar">
+      <div class="logo">
+        <a href="/LandingPage">
+          <img src="/static/images/logo.png" width="125px" /></a>
+      </div>
+      <nav>
+        <ul id="MenuItems">
+          <li><a href="/LandingPage">Home</a></li>
+          <li><a href="/browse">Browse Books</a></li>
+          <li><a href="/editAccount">Edit Account</a></li>
+          <li>
+            <form style="color: rgb(21, 20, 20)" action="/logout#login" method="post">
+              <button type="submit" class="btn">Log Out</button>
+            </form>
+          </li>
+        </ul>
+        <a href="/cart"><img src="https://cdn.discordapp.com/attachments/924623713528344587/962305453663084544/cart.png"
+            width="30px" height="30px" /></a>
+      </nav>
+
+      <img src="https://cdn.discordapp.com/attachments/924623713528344587/962307060962328596/menu.png" class="menu-icon"
+        onclick="menutoggle()" />
+    </div>
+  </div>
+  <div style="color: #ff523b; text-align: center">
+    <% if (locals.success){%>
+      <%=success%>
+        <%}%>
+  </div>
+  <div class="small-container shoppingCart">
+    <h1>Pending</h1>
+    <table>
+      <tr>
+        <th>Username</th>
+        <th>Method</th>
+        <th>Orders</th>
+        <th></th>
+      </tr>
+      <% details.map((order, index)=> { if (order.status === 'pending') { %>
+        <tr style='border: 1px dashed #000'>
+          <td>
+            <%= order.username %>
+          </td>
+          <td>
+            <%= order.method %>
+          </td>
+          <td>
+            <table>
+              <% order.cart.map((book, index)=> { %>
+                <tr>
+                  <td style="width: 20px">
+                    <img src="<%= book.image %>" alt="" />
+                  </td>
+                  <td>
+                    <%= book.name %>
+                  </td>
+                  <td>
+                    <%= +book.quantity %>
+                  </td>
+                  <td>
+                    BDT <%= Math.round((+book.quantity * +book.price) + (+book.quantity * +book.price)*0.2) %>
+                  </td>
+                </tr>
+                <%})%>
+            </table>
+          </td>
+          <td>
+            <form action="/manageOrderApprove" method="post" style='padding: 0 20px;'>
+              <input type="hidden" name="id" value='<%= order.id %>'>
+              <button type="submit" class="btn" style="width: 120px">
+                Approve
+              </button>
+            </form>
+            <form action="/manageOrderReject" method="post" style='padding: 0 20px;'>
+              <input type="hidden" name="id" value='<%= order.id %>'>
+              <button type="submit" class="btn" style="background-color: #ff523b; width: 120px">
+                Remove
+              </button>
+            </form>
+          </td>
+        </tr>
+        <%}})%>
+    </table>
+
+    <h1>Approved</h1>
+    <table>
+      <tr>
+        <th>Username</th>
+        <th>Method</th>
+        <th>Orders</th>
+        <th></th>
+      </tr>
+      <% details.map((order, index)=> { if (order.status === 'approved') { %>
+        <tr style='border: 1px dashed #000'>
+          <td>
+            <%= order.username %>
+          </td>
+          <td>
+            <%= order.method %>
+          </td>
+          <td>
+            <table>
+              <% order.cart.map((book, index)=> { %>
+                <tr>
+                  <td style="width: 20px">
+                    <img src="<%= book.image %>" alt="" />
+                  </td>
+                  <td>
+                    <%= book.name %>
+                  </td>
+                  <td>
+                    <%= +book.quantity %>
+                  </td>
+                  <td>
+                    BDT <%= Math.round((+book.quantity * +book.price) + (+book.quantity * +book.price)*0.2) %>
+                  </td>
+                </tr>
+                <%})%>
+            </table>
+          </td>
+          <td>
+        </tr>
+        <%}})%>
+    </table>
+
+    <h1>Rejected</h1>
+    <table>
+      <tr>
+        <th>Username</th>
+        <th>Method</th>
+        <th>Orders</th>
+        <th></th>
+      </tr>
+      <% details.map((order, index)=> { if (order.status === 'rejected') { %>
+        <tr style='border: 1px dashed #000'>
+          <td>
+            <%= order.username %>
+          </td>
+          <td>
+            <%= order.method %>
+          </td>
+          <td>
+            <table>
+              <% order.cart.map((book, index)=> { %>
+                <tr>
+                  <td style="width: 20px">
+                    <img src="<%= book.image %>" alt="" />
+                  </td>
+                  <td>
+                    <%= book.name %>
+                  </td>
+                  <td>
+                    <%= +book.quantity %>
+                  </td>
+                  <td>
+                    BDT <%= Math.round((+book.quantity * +book.price) + (+book.quantity * +book.price)*0.2) %>
+                  </td>
+                </tr>
+                <%})%>
+            </table>
+          </td>
+        </tr>
+        <%}})%>
+    </table>
+</body>
+
+</html>

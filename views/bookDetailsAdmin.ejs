@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books Detail - Boi Lagbe | Online Books Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div style="color: #ff523b; text-align: center;">
+            <% if (locals.success){%>
+                <%=success%>
+                    <%}%>
+        </div>
+        <div class="navbar">
+            <div class="logo">
+                <a href="/LandingPage"> <img src="/static/images/logo.png" width="125px"></a>
+            </div>
+            <nav>
+                <ul id="MenuItems">
+                    <li><a href="/adminLanding">Home</a></li>
+                    <li><a href="/addBook">Add Books</a></li>
+                    <li><a href="/manageBook">Manage Books</a></li>
+                    <li><a href="/manageOrder">Manage Order</a></li>
+                    <li><a href="/addAccount">Add Admin</a></li>
+                    <li>
+                        <form style="color:rgb(21, 20, 20);" action="/logout" method="post">
+                            <button type="submit" class="btn" ">Log
+                                Out</button>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+            <a href=" /cart"><img src="https://cdn.discordapp.com/attachments/924623713528344587/962305453663084544/cart.png"
+                                    width="30px" height="30px" style="margin-top:35px ;"></a>
+                                <img src="https://cdn.discordapp.com/attachments/924623713528344587/962307060962328596/menu.png"
+                                    class="menu-icon" onclick="menutoggle()">
+        </div>
+
+    </div>
+
+
+    <div class="small-container single-product">
+        <div style="color: #ff523b; text-align: center;">
+            <% if (locals.success){%>
+                <%=success%>
+                    <%}%>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <img src="<%=details.image%>" width="80%" height="600px">
+            </div>
+            <div class="col-2">
+                <h1 style="color: #612d99; font-size: xx-large;">
+                    <%=details.name%>
+                </h1>
+                <h4 style="color: #3a1d49;">Price: BDT<%=details.price %>
+                </h4>
+                Author: <%=details.author %><br>
+                    Publisher: <%=details.publisher %><br>
+                        Genres: <%=details.genre %><br>
+                            Demographic:<%=details.demographic %><br></p>
+
+                                <form action=" /deleteBook" method="post">
+                                    <input type="hidden" name="id" value="<%=details.id  %>">
+                                    <input type='submit' class='btn' style='background-color: #e84444;'
+                                        value='Delete' />
+                                </form>
+            </div>
+        </div>
+    </div>
+    <!---Footer-->
+    <div class="footer">
+        <div class="container">
+            <div class="row"></div>
+            <div class="footer-col-1">
+                <h3>Follow us</h3>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Twitter</li>
+                    <li>Instagram</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!---JS for menu toggle-->
+    <script>
+        var MenuItems = document.getElementById("MenuItems");
+        MenuItems.style.maxHeight = "0px";
+        function menutoggle() {
+            if (MenuItems.style.maxHeight == "0px") {
+                MenuItems.style.maxHeight = "200px";
+            }
+            else {
+                MenuItems.style.maxHeight = "0px";
+            }
+        }
+    </script>
+    <script>
+        window.addEventListener("load", (event) => (window.history.replaceState) ?
+            window.history.replaceState(null, null, window.location.href) : null
+        )
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart - Boi Lagbe | Online Books Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link href="/static/css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar">
+      <div class="logo">
+        <a href="/LandingPage">
+          <img src="/static/images/logo.png" width="125px" /></a>
+      </div>
+      <nav>
+        <ul id="MenuItems">
+          <li><a href="/LandingPage">Home</a></li>
+          <li><a href="/browse">Browse Books</a></li>
+          <li><a href="/editAccount">Edit Account</a></li>
+          <li>
+            <form style="color: rgb(21, 20, 20)" action="/logout#login" method="post">
+              <button type="submit" class="btn">Log Out</button>
+            </form>
+          </li>
+        </ul>
+        <a href="/cart"><img src="https://cdn.discordapp.com/attachments/924623713528344587/962305453663084544/cart.png"
+            width="30px" height="30px" /></a>
+      </nav>
+
+      <img src="https://cdn.discordapp.com/attachments/924623713528344587/962307060962328596/menu.png" class="menu-icon"
+        onclick="menutoggle()" />
+    </div>
+  </div>
+  <div style="color: #ff523b; text-align: center">
+    <% if (locals.success){%>
+      <%=success%>
+        <%}%>
+  </div>
+  <div class="small-container shoppingCart">
+    <table>
+      <tr>
+        <th>Cover</th>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+      <% details.map((book, index)=> { %>
+        <tr>
+          <td style="width: 120px">
+            <img src="<%= book.image %>" alt="" />
+          </td>
+          <td>
+            <%= book.name %>
+          </td>
+          <td>
+            <input id="qt_<%= index %>" class="qt" type="number" data-pid="<%= book.id %>" data-name="<%= book.name %>"
+              data-price="<%= book.price %>" style="width: 80px" value="<%= +book.quantity %>"
+              onchange='priceUpdate("<%= index %>", "<%= book.id %>")' />
+          </td>
+          <input id="pp_<%= index %>" type="hidden" value="<%= book.price   %>" />
+          <td id="p_<%= index %>">BDT <%= +book.quantity * +book.price %>
+          </td>
+          <td>
+            <form action="/remove" method="post">
+              <h4>
+                <input type="hidden" name="name" value="<%= book.name   %>" />
+              </h4>
+              <input type="hidden" name="username" value="<%= book.username   %>" />
+              <button type="submit" class="btn" style="width: 120px">
+                Remove
+              </button>
+            </form>
+          </td>
+        </tr>
+        <%})%>
+    </table>
+    <% let total=details.reduce((prev, {quantity, price})=> prev + (+quantity)
+      * (+price), 0) %>
+      <div class="total-price">
+        <table>
+          <tr>
+            <td>VAT</td>
+            <td>2%</td>
+          </tr>
+          <tr>
+            <%total+=(total /100)*2 %>
+              <td>Total</td>
+              <td id="total">BDT <%=Math.round(total)%>
+              </td>
+          </tr>
+          <tr>
+            <td>
+              <a href='/refresh' class="btn">Refesh Cart</a>
+            </td>
+          </tr>
+          <tr>
+            <td style="display:flex; justify-content: flex-end">
+              <button class="btn btn-lg btn-open">Check out</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal-container">
+    <section class="modal hidden">
+      <div class="flex">
+        <h1>Checkout</h1>
+        <button class="btn-close" style="margin-left: auto">⨉</button>
+      </div>
+      <section class='cr-container'>
+        <div>
+          <input type="radio" id="control_01" class='method' name="select" value="bkash" checked>
+          <label for="control_01" class="bkash">
+            <h2>Bkash</h2>
+          </label>
+        </div>
+        <div>
+          <input type="radio" id="control_02" class='method' name="select" value="nagad">
+          <label for="control_02" class='nagad'>
+            <h2>Nagal</h2>
+          </label>
+        </div>
+        <div>
+          <input type="radio" id="control_03" class='method' name="select" value="cash">
+          <label for="control_03">
+            <h2>Cash on Delivery</h2>
+          </label>
+        </div>
+      </section>
+      <br />
+      <a class="btn text-center" onclick="checkout()">Confirm Payment</a>
+    </section>
+  </div>
+  <div class="overlay hidden"></div>
+
+  <script>
+    const modal = document.querySelector(".modal");
+    const overlay = document.querySelector(".overlay");
+    const openModalBtn = document.querySelector(".btn-open");
+    const closeModalBtn = document.querySelector(".btn-close");
+
+    // close modal function
+    const closeModal = function () {
+      modal.classList.add("hidden");
+      overlay.classList.add("hidden");
+    };
+
+    // close the modal when the close button and overlay is clicked
+    closeModalBtn.addEventListener("click", closeModal);
+    overlay.addEventListener("click", closeModal);
+
+    // close modal when the Esc key is pressed
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+        closeModal();
+      }
+    });
+
+    // open modal function
+    const openModal = function () {
+      modal.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+    };
+    // open modal event
+    openModalBtn.addEventListener("click", openModal);
+  </script>
+  <!---JS for menu toggle-->
+  <script>
+    var MenuItems = document.getElementById("MenuItems");
+    MenuItems.style.maxHeight = "0px";
+    function menutoggle() {
+      if (MenuItems.style.maxHeight == "0px") {
+        MenuItems.style.maxHeight = "200px";
+      } else {
+        MenuItems.style.maxHeight = "0px";
+      }
+    }
+  </script>
+  <script>
+    window.addEventListener("load", (event) =>
+      window.history.replaceState
+        ? window.history.replaceState(null, null, window.location.href)
+        : null
+    );
+  </script>
+  <script>
+    const totalPriceIndivitual = new Array(+"<%=details.length %>").fill(0);
+
+    const calculateTotalPrice = () =>
+      totalPriceIndivitual
+        .map((_, index) => {
+          const quantity = document.querySelector(`#qt_${index}`).value;
+          const price = document.querySelector(`#pp_${index}`).value;
+
+          return quantity * price;
+        })
+        .reduce((prev, cur) => prev + cur);
+
+    calculateTotalPrice();
+
+    const priceUpdate = (index) => {
+      const price = document.querySelector(`#pp_${index}`).value;
+      const quantity = document.querySelector(`#qt_${index}`).value;
+      const total = calculateTotalPrice();
+
+      totalPriceIndivitual[index] = quantity;
+      document.querySelector(`#p_${index}`).innerHTML =
+        "BDT " + +quantity * +price;
+      document.querySelector("#total").innerHTML = Math.round(total + (total / 100) * 2);
+    };
+
+    const checkout = () => {
+      const e = document.querySelectorAll(`.qt`);
+      const em = Array.from(document.querySelectorAll(`.method`))
+      let method;
+      em.forEach(e => (e.checked) ? method = e.value : null)
+
+      let payload = [];
+      Array.from(e).map((e) => {
+        payload = [...payload, { pid: e.dataset.pid, name: e.dataset.name, price: e.dataset.price, quantity: e.value }];
+      });
+
+      fetch('/pay', {
+        method: "POST",
+        body: JSON.stringify({ method, cart: payload }),
+        headers: { "Content-type": "application/json; charset=UTF-8" }
+      })
+        .then(res => window.location = '/confirm')
+    };
+  </script>
+</body>
+
+</html>
